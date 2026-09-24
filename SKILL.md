@@ -4,6 +4,9 @@ description: Translate low-friction product intent into an explicit, reviewable 
 ---
 # Product Intent Translator
 Use this skill when a user has a product idea, UI feedback, screenshots, references, an existing project, or a follow-up change and wants a coding agent to understand and implement it.
+## Current capability
+Use the conversational workflow below to produce a self-contained Markdown handoff from the context actually available. This skill has no independent long-term memory, implementation runner, or automatic prompts.chat / prompt-optimizer client.
+The bundled exporter is experimental and has known intent-preservation and downstream-format defects. Read [the integration status](integrations/pipeline.md) for machine integration requests; [the test report](TEST_REPORT.md) records the tested versions and limits. Do not describe the current JSON exports as directly importable or the three-project pipeline as connected.
 ## Contract
 The skill owns the translation boundary between product intent and implementation. It does not claim to have built, run, previewed, or verified anything unless the current agent actually did so.
 Keep four kinds of information separate:
@@ -26,7 +29,7 @@ Default response:
 1. One or two sentences: 我理解你想要的是…… plus only important suggested defaults.
 2. A copyable Markdown Prompt for the coding agent.
 3. At most one high-impact question, when needed.
-When machine integration is requested, also emit the JSON shape in schemas/product-intent.schema.json and adapter payloads described in integrations/pipeline.md.
+When machine integration is requested, use schemas/product-intent.schema.json as the experimental intent-record shape and read integrations/pipeline.md before preparing a payload. Validate against the chosen destination's actual contract. Report any missing adapter or validation instead of claiming integration from file generation alone.
 ## Self-check
 Before handing off, verify:
 - Every explicit request is present.
@@ -40,9 +43,8 @@ Before handing off, verify:
 - Open questions and missing permissions are visible.
 - Claimed implementation, preview, tests, and business outcomes are backed by actual evidence.
 ## Handoff bundle
-For a complete handoff, produce:
+When a complete file bundle is requested, the intended artifacts are:
 - intent.json: normalized intent record.
 - prompt.md: current coding-agent Prompt.
-- prompts-chat.json: optional Prompt/Skill asset payload for prompts.chat.
-- prompt-optimizer.json: optional optimization/test payload for prompt-optimizer.
-The bundled script scripts/pipeline.py renders these files from a normalized intent JSON file without contacting external services. External calls remain opt-in and must be performed by the receiving tool with its own credentials and permissions.
+- Optional destination payloads: use the selected interface's actual format and name; distinguish schema validation from a successful live call.
+The current scripts/pipeline.py writes only prompt.md and two custom JSON files without contacting external services. It does not export intent.json, loses readiness/revision/decision metadata, can render rejected items as active requirements, and can let an old prompt_markdown hide updated constraints. It also does not fully validate the input schema. Treat its outputs as experimental; do not rely on them as a complete handoff. Use the conversational Markdown workflow and the original intent record until those defects are fixed. External calls require an implemented client and the user's existing authorization for the destination and data.
