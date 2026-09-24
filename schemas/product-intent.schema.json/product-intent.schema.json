@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Alen-hjm/product-intent-translator/blob/main/schemas/product-intent.schema.json",
+  "title": "Product Intent Translator Handoff",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "revision",
+    "intent",
+    "context",
+    "requirements",
+    "constraints",
+    "assumptions",
+    "open_questions",
+    "acceptance",
+    "prompt_markdown",
+    "readiness"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "intent": {
+      "type": "string"
+    },
+    "context": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "question",
+          "impact"
+        ],
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "impact": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "acceptance": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "prompt_markdown": {
+      "type": "string"
+    },
+    "readiness": {
+      "enum": [
+        "draft",
+        "ready"
+      ]
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": [
+        "text",
+        "source"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "explicit",
+            "context",
+            "suggestion",
+            "open"
+          ]
+        },
+        "status": {
+          "enum": [
+            "active",
+            "rejected",
+            "locked",
+            "changed"
+          ]
+        },
+        "why": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
