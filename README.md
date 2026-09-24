@@ -2,9 +2,29 @@
 
 产品经理与 coding agent 之间的产品意图翻译器。
 
-**目标：以尽可能低的表达和决策门槛，产出符合用户预期、能够持续演进的产品。**
+目标：以尽可能低的表达和决策门槛，产出符合用户预期、能够持续演进的产品。
 
-> 当前处于设计与研究阶段。本仓库尚未提供可安装的 `SKILL.md`、可运行的无代码编辑器或经过验证的完整工作流。
+## 当前状态
+
+仓库已提供首个可测试版本：
+
+- 根目录 SKILL.md：可安装的意图翻译规则。
+- schemas/product-intent.schema.json：统一的意图与交接数据结构。
+- scripts/pipeline.py：离线渲染器，将意图记录输出为 coding Prompt、prompts.chat 资产和 prompt-optimizer 测试载荷。
+- examples/short-video-intent.json：短视频产品测试样例。
+- integrations/pipeline.md：三段链路的接入说明。
+
+原型编辑、页面运行、真实模型调用和 UI 选择仍需要外部工具；本仓库不会把未执行的预览、测试或业务结果写成已完成。
+
+## 三段链路
+
+1. product-intent-translator 负责保留用户意图，区分事实、建议、假设和未决问题，并生成可核对的 coding-agent Prompt。
+2. prompts.chat 可保存和检索生成的 Prompt/Skill 资产。
+3. prompt-optimizer 可对生成的 Prompt 做真实执行、评估和版本比较。
+
+离线生成示例：
+
+    python scripts/pipeline.py examples/short-video-intent.json --out dist
 
 ## 核心方向
 
@@ -16,35 +36,8 @@
 
 针对有依据的后续变化，保留合理的产品与代码结构。新增功能时延续已认可的视觉语言，保持旧功能与数据的有效性，同时避免提前堆积无用功能和复杂架构。
 
-## 预期使用过程
-
-用户表达想法 → 形成产品理解 → 展示样例或原型 → 用户选择与调整 → 生成执行要求 → agent 实现 → 核对真实结果 → 接收下一次想法。
-
-各步骤按任务需要使用；用户无需填写专业需求表，也不必操作全部步骤。默认采用可阅读的 Markdown，结构化 JSON 与 Schema 由 skill 在内部或集成时维护。
-
 ## 设计与研究
 
-| 文档 | 内容 |
-| --- | --- |
-| [整体设计草案](docs/superpowers/specs/2026-09-22-vibe-coding-contract-design.md) | 定位、转换方式、输入输出、反馈与视觉选择机制 |
-| [核心设计：视觉对齐与持续演进](docs/superpowers/specs/2026-09-22-product-intent-core-design.md) | 两条核心主线、边界与连续迭代验证方案 |
-| [24 项 UI 资源与选择机制](docs/research/2026-09-22-ui-library-catalog.md) | UI、模板、配色、动效资源及官方来源、适配与许可记录 |
-
-文档路径中的早期名称保留以避免已有引用失效，当前建议的 skill 名称为 `product-intent-translator`。
-
-## 当前进度
-
-- 已完成：产品方向讨论、设计草案、UI 资源初步调研。
-- 待实现：skill 指令、输入输出样例、结构化格式与必要校验。
-- 待明确并实现：原型预览、可视化选择与 DIY 所依赖的工具接口。
-- 待验证：真实案例中的意图准确性、UI 还原、修改成本和后续扩展表现。
-
-原型编辑、页面运行与代码操作需要实际工具支持。skill 负责协调、转换和验证；文档描述不代表这些工具已经实现。
-
-## 验证重点
-
-使用同一小产品进行连续迭代：从少量功能开始，调整 UI、组合候选设计，再增加一个合理的新需求，检查用户是否需要反复解释、已认可部分是否被误改、旧功能与数据是否保持，以及变化的实际成本。
-
-## 资源说明
-
-外部库仅作为研究与选材来源，本仓库没有打包其组件源码或商业素材。具体条目的版本、许可证与适用条件应在采用时重新核对；资源数量不代表已验证的模板数量或兼容性。
+- [整体设计草案](docs/superpowers/specs/2026-09-22-vibe-coding-contract-design.md)
+- [核心设计：视觉对齐与持续演进](docs/superpowers/specs/2026-09-22-product-intent-core-design.md)
+- [24 项 UI 资源与选择机制](docs/research/2026-09-22-ui-library-catalog.md)
